@@ -106,8 +106,29 @@ def full_dataframe():
     #Obtain DataFrame for sales_data
     df_3 = get_sales_data()
 
-    #Concatenate three DataFrames
-    df = pd.concat([df_1, df_2, df_3], axis = 1)
+    #Merge DataFrame 3 and 2
+    sales_plus_stores = pd.merge(
+    df_3, 
+    df_2, 
+    how = 'left', 
+    left_on = 'store', 
+    right_on = 'store_id'
+    )
+
+    #Drop redundant columns 
+    sales_plus_stores = sales_plus_stores.drop(columns = ["store"])
+
+    #Merge all DataFrames
+    df = pd.merge(
+    sales_plus_stores, 
+    df_1, 
+    how = 'left', 
+    left_on = 'item', 
+    right_on = 'item_id'
+    )
+
+    #Drop redundant columns
+    df = df.drop(columns = ['item_id', 'index'])
 
     return df
 
